@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
 </head>
 <style>
 
@@ -79,5 +82,40 @@ height: 650px;
 <div class="03"> <iframe class="vid" src="https://www.mrrobot.ga/kurdish.html"> </iframe> </div>
 
 <div class="04"> <iframe class="vid2" src="https://www.mrrobot.ga/error.html"> </iframe> </div>
+
+<!--------->
+
+<div class="g-recaptcha brochure__form__captcha" data-sitekey="6LelrnccAAAAAM-QEHQn8BeQoduikuWaeXsyQ24T"></div>
+
+<php>
+
+$recaptcha = $_POST['g-recaptcha-response'];
+$res = reCaptcha($recaptcha);
+if(!$res['success']){
+  // Error
+}
+</php>
+<php>
+
+function reCaptcha($recaptcha){
+  $secret = "6LelrnccAAAAAG5Ki-IX52Xjc6_Duj6hsHfMRO5U";
+  $ip = $_SERVER['REMOTE_ADDR'];
+
+  $postvars = array("secret"=>$secret, "response"=>$recaptcha, "remoteip"=>$ip);
+  $url = "https://www.google.com/recaptcha/api/siteverify";
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
+  $data = curl_exec($ch);
+  curl_close($ch);
+
+  return json_decode($data, true);
+}
+
+</php>
+
+
 </body>
 </html>
